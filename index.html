@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111111">
+<title>BUSINESS X</title>
+
+<style>
+:root{
+--bg:#f3f4f6;--surface:rgba(255,255,255,.78);--solid:#fff;
+--text:#171717;--muted:#777;--border:rgba(0,0,0,.09);
+--accent:#171717;--soft:#e9e9e9;--shadow:0 8px 30px rgba(0,0,0,.055)
+}
+body.blue{
+--bg:#eaf1fb;--surface:rgba(255,255,255,.78);--solid:#f8fbff;
+--text:#10294d;--muted:#61748e;--border:rgba(32,83,145,.16);
+--accent:#1d5fae;--soft:#dce9f8;--shadow:0 8px 30px rgba(18,58,105,.09)
+}
+body.blue .primary-btn{background:#1d5fae;color:#fff}
+body.blue .brand-icon{background:#1d5fae;color:#fff}
+body.dark{
+--bg:#101010;--surface:rgba(35,35,35,.82);--solid:#202020;
+--text:#f5f5f5;--muted:#aaa;--border:rgba(255,255,255,.1);
+--accent:#fff;--soft:#303030;--shadow:0 8px 30px rgba(0,0,0,.2)
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+transition:background .25s,color .25s}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+.sidebar{
+width:245px;padding:25px 17px;background:var(--surface);
+backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+border-right:1px solid var(--border);position:fixed;inset:0 auto 0 0;
+z-index:10;overflow-y:auto
+}
+body[dir=rtl] .sidebar{left:auto;right:0;border-right:0;border-left:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:11px;margin:0 0 35px 5px}
+.brand-icon{width:39px;height:39px;border-radius:13px;display:grid;place-items:center;
+background:var(--text);color:var(--bg);font-weight:900;font-size:20px}
+.brand-name{font-size:18px;font-weight:850;letter-spacing:1px}
+.brand-sub{font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:3px}
+.nav-label{font-size:10px;color:var(--muted);font-weight:800;letter-spacing:1.5px;padding:0 12px;margin:23px 0 10px}
+.nav-btn{width:100%;display:flex;align-items:center;gap:13px;padding:12px 13px;
+border:0;border-radius:12px;color:var(--muted);background:transparent;text-align:start;
+margin:3px 0;font-size:13px;font-weight:650;transition:.2s}
+.nav-btn:hover,.nav-btn.active{background:var(--soft);color:var(--text)}
+.nav-icon{width:20px;text-align:center;font-size:17px}
+.sidebar-bottom{margin-top:25px;border-top:1px solid var(--border);padding-top:15px}
+.main{margin-left:245px;width:calc(100% - 245px);padding:27px 32px 50px}
+body[dir=rtl] .main{margin-left:0;margin-right:245px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:28px}
+.page-title{font-size:25px;font-weight:800;margin:0}
+.page-subtitle{color:var(--muted);font-size:12px;margin-top:6px}
+.top-actions{display:flex;align-items:center;gap:10px}
+.icon-btn{width:40px;height:40px;border:1px solid var(--border);border-radius:13px;background:var(--surface);color:var(--text)}
+.language-select,.field{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:11px;padding:11px 12px;outline:none}
+.language-select{font-size:12px;max-width:145px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:19px;padding:19px;box-shadow:var(--shadow);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:20px}
+.stat-label{font-size:12px;color:var(--muted);font-weight:600}
+.stat-value{font-size:25px;font-weight:850;margin:12px 0 7px;letter-spacing:-.7px}
+.stat-note{font-size:11px;color:var(--muted)}
+.stat-icon{font-size:20px;margin-bottom:14px}
+.content-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:17px;margin-bottom:18px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px}
+.section-title{font-size:15px;font-weight:800;margin:0}
+.small-muted{font-size:11px;color:var(--muted)}
+.chart{height:190px;display:flex;align-items:end;gap:13px;padding:10px 4px 0}
+.chart-col{flex:1;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:8px}
+.bar-wrap{height:145px;width:100%;display:flex;align-items:end;justify-content:center}
+.bar{width:65%;max-width:35px;border-radius:8px 8px 3px 3px;background:var(--text);opacity:.8;min-height:5px}
+.chart-label{font-size:10px;color:var(--muted)}
+.list-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--border)}
+.list-row:last-child{border-bottom:0}
+.row-title{font-size:12px;font-weight:700}
+.row-sub{font-size:10px;color:var(--muted);margin-top:4px}
+.amount{font-size:12px;font-weight:800}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:550px}
+th{text-align:start;color:var(--muted);font-size:10px;letter-spacing:.7px;padding:12px;border-bottom:1px solid var(--border)}
+td{padding:14px 12px;border-bottom:1px solid var(--border);font-size:12px}
+tr:last-child td{border-bottom:0}
+.status{display:inline-block;border-radius:20px;padding:5px 9px;font-size:10px;font-weight:750;background:var(--soft)}
+.primary-btn{background:var(--text);color:var(--bg);border:0;border-radius:11px;padding:11px 16px;font-size:12px;font-weight:750}
+.secondary-btn{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:11px;padding:10px 14px;font-size:12px;font-weight:700}
+.danger-btn{background:transparent;color:#d65b5b;border:1px solid #d65b5b;border-radius:10px;padding:8px 11px;font-size:11px}
+.page-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.search{width:100%;max-width:260px}
+.field{width:100%;font-size:13px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.form-group{display:flex;flex-direction:column;gap:7px}
+.form-group label{font-size:11px;font-weight:700;color:var(--muted)}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:30;display:none;align-items:center;justify-content:center;padding:15px}
+.modal-backdrop.show{display:flex}
+.modal{width:100%;max-width:520px;background:var(--solid);color:var(--text);border:1px solid var(--border);border-radius:20px;padding:23px;max-height:90vh;overflow:auto}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-title{font-size:17px;font-weight:850}
+.close-btn{border:0;background:var(--soft);color:var(--text);border-radius:9px;width:32px;height:32px}
+.empty{text-align:center;padding:35px 10px;color:var(--muted);font-size:12px}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.setting-item{display:flex;justify-content:space-between;align-items:center;gap:15px}
+.setting-name{font-size:13px;font-weight:750}
+.setting-desc{font-size:11px;color:var(--muted);margin-top:5px}
+.mobile-menu{display:none}
+.notice{font-size:11px;color:var(--muted);line-height:1.6;margin-top:15px}
+.document-preview{background:#fff;color:#171717;padding:28px;border-radius:12px;margin:12px 0}
+.document-preview h2{margin:0 0 5px;font-size:23px}
+.document-preview p{font-size:12px;line-height:1.6}
+.document-preview table{min-width:0}
+.document-preview th,.document-preview td{color:#222;border-bottom:1px solid #ddd}
+.document-preview .doc-total{text-align:right;font-weight:800;margin-top:18px}
+@media(max-width:1050px){.stats{grid-template-columns:repeat(2,1fr)}.content-grid{grid-template-columns:1fr}}
+@media(max-width:700px){
+.sidebar{width:270px;transform:translateX(-105%);transition:.25s}
+body[dir=rtl] .sidebar{transform:translateX(105%)}
+.sidebar.open{transform:translateX(0)!important}
+.main,body[dir=rtl] .main{margin:0;width:100%;padding:19px 15px 85px}
+.mobile-menu{display:inline-block}
+.topbar{margin-bottom:22px}.page-title{font-size:21px}
+.stats{gap:10px}.stat-value{font-size:20px}.card{padding:15px}
+.settings-grid{grid-template-columns:1fr}.language-select{max-width:120px}
+.form-grid{grid-template-columns:1fr}
+}
+@media print{
+body{background:#fff!important;color:#111!important}
+.sidebar,.topbar,.page-actions,.no-print,.modal-backdrop{display:none!important}
+.main{margin:0!important;padding:0!important;width:100%!important}
+.document-preview{display:block!important;border:0!important;box-shadow:none!important}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+<div class="brand">
+<div class="brand-icon">X</div>
+<div><div class="brand-name">BUSINESS X</div><div class="brand-sub" data-i="businessSystem">BUSINESS MANAGEMENT</div></div>
+</div>
+<div class="nav-label" data-i="mainMenu">MAIN MENU</div>
+<button class="nav-btn active" data-page="dashboard"><span class="nav-icon">▦</span><span data-i="dashboard">Dashboard</span></button>
+<button class="nav-btn" data-page="sales"><span class="nav-icon">↗</span><span data-i="sales">Sales</span></button>
+<button class="nav-btn" data-page="products"><span class="nav-icon">▣</span><span data-i="products">Products</span></button>
+<button class="nav-btn" data-page="customers"><span class="nav-icon">♙</span><span data-i="customers">Customers</span></button>
+<button class="nav-btn" data-page="quotations"><span class="nav-icon">▤</span><span data-i="quotations">Quotations</span></button>
+<button class="nav-btn" data-page="invoices"><span class="nav-icon">▧</span><span data-i="invoices">Invoices</span></button>
+<button class="nav-btn" data-page="receipts"><span class="nav-icon">▣</span><span data-i="receipts">Receipts</span></button>
+<button class="nav-btn" data-page="expenses"><span class="nav-icon">↘</span><span data-i="expenses">Expenses</span></button>
+<div class="nav-label" data-i="management">MANAGEMENT</div>
+<button class="nav-btn" data-page="tax"><span class="nav-icon">％</span><span data-i="tax">Tax & TRA</span></button>
+<button class="nav-btn" data-page="reports"><span class="nav-icon">▥</span><span data-i="reports">Reports</span></button>
+<div class="sidebar-bottom">
+<button class="nav-btn" data-page="settings"><span class="nav-icon">⚙</span><span data-i="settings">Settings</span></button>
+</div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+<div style="display:flex;align-items:center;gap:12px">
+<button class="icon-btn mobile-menu" id="menuBtn">☰</button>
+<div><h1 class="page-title" id="pageTitle">Dashboard</h1><div class="page-subtitle" data-i="welcome">Welcome back. Here is your business overview.</div></div>
+</div>
+<div class="top-actions">
+<select class="language-select" id="languageSelect" aria-label="Language">
+<option value="en">English</option><option value="sw">Kiswahili</option><option value="ar">العربية</option><option value="zh">中文</option>
+</select>
+<button class="icon-btn" id="themeBtn">◐</button>
+</div>
+</header>
+<section id="pageContent"></section>
+</main>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+<div class="modal">
+<div class="modal-head"><div class="modal-title" id="modalTitle"></div><button class="close-btn" id="closeModal">✕</button></div>
+<div id="modalContent"></div>
+</div>
+</div>
+
+<script>
+/* ================= LANGUAGE DICTIONARIES ================= */
+const L={
+en:{
+businessSystem:"BUSINESS MANAGEMENT",mainMenu:"MAIN MENU",management:"MANAGEMENT",
+dashboard:"Dashboard",sales:"Sales",products:"Products",customers:"Customers",expenses:"Expenses",
+quotations:"Quotations",invoices:"Invoices",receipts:"Receipts",tax:"Tax & TRA",reports:"Reports",settings:"Settings",
+welcome:"Welcome back. Here is your business overview.",totalSales:"Total sales",cashReceived:"Cash received",
+expensesTotal:"Total expenses",outstanding:"Outstanding balances",revenueNote:"Value of recorded sales",
+cashNote:"Money actually received",expensesNote:"Recorded business costs",balanceNote:"Unpaid customer balances",
+salesOverview:"Sales overview",recentSales:"Recent sales",viewAll:"View all",quickOverview:"Business overview",
+today:"Today",week:"This week",month:"This month",year:"This year",allTime:"All time",
+customer:"Customer",product:"Product",date:"Date",amount:"Amount",status:"Status",paid:"Paid",partial:"Partial",unpaid:"Unpaid",
+addSale:"Add sale",newSale:"New sale",selectCustomer:"Select customer",selectProduct:"Select product",
+quantity:"Quantity",unitPrice:"Unit price",total:"Total",paymentReceived:"Amount received",saveSale:"Save sale",
+category:"Category",stock:"Stock quantity",price:"Selling price",costPrice:"Cost price",
+addProduct:"Add product",newProduct:"New product",productName:"Product name",saveProduct:"Save product",
+customerName:"Customer name",phone:"Phone number",addCustomer:"Add customer",newCustomer:"New customer",saveCustomer:"Save customer",
+addExpense:"Add expense",newExpense:"New expense",saveExpense:"Save expense",expenseName:"Expense description",
+expenseCategory:"Expense category",expenseAmount:"Expense amount",description:"Description",search:"Search...",
+actions:"Actions",delete:"Delete",cancel:"Cancel",confirmDelete:"Delete this record?",
+businessProfile:"Business profile",businessName:"Business name",saveSettings:"Save settings",
+appearance:"Appearance",theme:"Theme",systemLanguage:"System language",darkMode:"Dark mode",lightMode:"Light mode",
+demoNotice:"DEMO VERSION — Data is stored only in this browser on this device.",
+noSales:"No sales recorded yet.",noProducts:"No products added yet.",noCustomers:"No customers added yet.",noExpenses:"No expenses recorded yet.",
+noData:"No records found.",saved:"Saved successfully.",required:"Please complete the required fields.",
+cash:"Cash",bank:"Bank",mobileMoney:"Mobile money",other:"Other",paymentMethod:"Payment method",
+remaining:"Remaining balance",totalProducts:"Total products",totalCustomers:"Total customers",recorded:"Recorded",
+profitNote:"Profit is not calculated yet. Cost of goods sold and full stock accounting are not implemented.",
+netCash:"Cash after recorded expenses",reportSummary:"Summary",reportsTitle:"Business reports",
+newQuotation:"New quotation",addQuotation:"Create quotation",quotationNo:"Quotation number",
+quotationDate:"Quotation date",validUntil:"Valid until",quotationList:"Saved quotations",
+saveQuotation:"Save quotation",noQuotations:"No quotations saved yet.",open:"Open",printPDF:"Print / Save PDF",
+convertInvoice:"Create invoice from quotation",newInvoice:"New invoice",addInvoice:"Create invoice",
+invoiceNo:"Invoice number",dueDate:"Due date",invoiceList:"Saved invoices",saveInvoice:"Save invoice",
+noInvoices:"No invoices saved yet.",invoiceStatus:"Invoice status",markPaid:"Mark paid",
+newReceipt:"New receipt",addReceipt:"Record payment",receiptNo:"Receipt number",
+receiptList:"Saved receipts",saveReceipt:"Save receipt",noReceipts:"No receipts saved yet.",
+reference:"Transaction reference",relatedInvoice:"Related invoice (optional)",paymentDate:"Payment date",
+taxRecords:"Tax records",newTax:"New tax record",addTax:"Add tax record",taxType:"Tax type",
+taxAmount:"Tax amount",taxDate:"Payment / record date",taxReference:"TRA payment reference",
+taxList:"Saved tax records",saveTax:"Save tax record",noTax:"No tax records saved yet.",
+vat:"VAT",incomeTax:"Income tax",withholding:"Withholding tax",licence:"Licence / permit",otherTax:"Other tax",
+attachment:"Attachment",chooseFile:"Choose file",expenseMethod:"Payment method",expenseDate:"Expense date",
+quotation:"Quotation",invoice:"Invoice",receipt:"Receipt",document:"Document",subtotal:"Subtotal",
+discount:"Discount",grandTotal:"Grand total",businessAddress:"Business address",businessPhone:"Business phone",
+notes:"Notes",taxDisclaimer:"Tax records are manual records. Confirm applicable tax rates and filing requirements with TRA or a qualified tax professional.",
+downloadData:"Export backup",restoreData:"Import backup",backupHint:"Save a copy of your business records as a JSON backup.",
+noAttachment:"No attachment",deleteAttachment:"Remove attachment",invoiceCreated:"Invoice created from quotation.",
+period:"Period",allRecords:"All records",expenseReport:"Expense report",salesReport:"Sales report",
+totalRecordedSales:"Recorded sales",notCalculated:"Not calculated",save:"Save",close:"Close"
+},
+sw:{
+businessSystem:"USIMAMIZI WA BIASHARA",mainMenu:"MENYU KUU",management:"USIMAMIZI",
+dashboard:"Dashibodi",sales:"Mauzo",products:"Bidhaa",customers:"Wateja",expenses:"Matumizi",
+quotations:"Nukuu za bei",invoices:"Ankara",receipts:"Risiti",tax:"Kodi na TRA",reports:"Ripoti",settings:"Mipangilio",
+welcome:"Karibu tena. Huu hapa muhtasari wa biashara yako.",totalSales:"Jumla ya mauzo",cashReceived:"Fedha zilizopokelewa",
+expensesTotal:"Jumla ya matumizi",outstanding:"Madeni ya wateja",revenueNote:"Thamani ya mauzo yaliyorekodiwa",
+cashNote:"Fedha zilizopokelewa kweli",expensesNote:"Gharama za biashara zilizorekodiwa",balanceNote:"Salio ambalo wateja hawajalipa",
+salesOverview:"Muonekano wa mauzo",recentSales:"Mauzo ya hivi karibuni",viewAll:"Ona yote",quickOverview:"Muhtasari wa biashara",
+today:"Leo",week:"Wiki hii",month:"Mwezi huu",year:"Mwaka huu",allTime:"Muda wote",
+customer:"Mteja",product:"Bidhaa",date:"Tarehe",amount:"Kiasi",status:"Hali",paid:"Imelipwa",partial:"Sehemu imelipwa",unpaid:"Haijalipwa",
+addSale:"Ongeza mauzo",newSale:"Mauzo mapya",selectCustomer:"Chagua mteja",selectProduct:"Chagua bidhaa",
+quantity:"Idadi",unitPrice:"Bei kwa moja",total:"Jumla",paymentReceived:"Kiasi kilicholipwa",saveSale:"Hifadhi mauzo",
+category:"Kundi",stock:"Idadi ya bidhaa",price:"Bei ya kuuza",costPrice:"Bei ya kununua",
+addProduct:"Ongeza bidhaa",newProduct:"Bidhaa mpya",productName:"Jina la bidhaa",saveProduct:"Hifadhi bidhaa",
+customerName:"Jina la mteja",phone:"Namba ya simu",addCustomer:"Ongeza mteja",newCustomer:"Mteja mpya",saveCustomer:"Hifadhi mteja",
+addExpense:"Ongeza matumizi",newExpense:"Matumizi mapya",saveExpense:"Hifadhi matumizi",expenseName:"Maelezo ya matumizi",
+expenseCategory:"Aina ya matumizi",expenseAmount:"Kiasi cha matumizi",description:"Maelezo",search:"Tafuta...",
+actions:"Vitendo",delete:"Futa",cancel:"Ghairi",confirmDelete:"Unataka kufuta rekodi hii?",
+businessProfile:"Taarifa za biashara",businessName:"Jina la biashara",saveSettings:"Hifadhi mipangilio",
+appearance:"Muonekano",theme:"Mandhari",systemLanguage:"Lugha ya mfumo",darkMode:"Mandhari nyeusi",lightMode:"Mandhari nyeupe",
+demoNotice:"TOLEO LA MAJARIBIO — Taarifa zimehifadhiwa kwenye browser ya kifaa hiki pekee.",
+noSales:"Hakuna mauzo yaliyorekodiwa bado.",noProducts:"Hakuna bidhaa zilizoongezwa bado.",noCustomers:"Hakuna wateja walioongezwa bado.",noExpenses:"Hakuna matumizi yaliyorekodiwa bado.",
+noData:"Hakuna rekodi zilizopatikana.",saved:"Imehifadhiwa kikamilifu.",required:"Tafadhali jaza sehemu zinazohitajika.",
+cash:"Taslimu",bank:"Benki",mobileMoney:"Pesa za simu",other:"Nyingine",paymentMethod:"Njia ya malipo",
+remaining:"Salio linalodaiwa",totalProducts:"Jumla ya bidhaa",totalCustomers:"Jumla ya wateja",recorded:"Zilizorekodiwa",
+profitNote:"Faida bado haijahesabiwa. Gharama ya bidhaa zilizouzwa na uhasibu kamili wa stoo havijawekwa.",
+netCash:"Fedha baada ya matumizi yaliyorekodiwa",reportSummary:"Muhtasari",reportsTitle:"Ripoti za biashara",
+newQuotation:"Nukuu mpya ya bei",addQuotation:"Tengeneza nukuu",quotationNo:"Namba ya nukuu",
+quotationDate:"Tarehe ya nukuu",validUntil:"Itatumika hadi",quotationList:"Nukuu zilizohifadhiwa",
+saveQuotation:"Hifadhi nukuu",noQuotations:"Hakuna nukuu zilizohifadhiwa bado.",open:"Fungua",printPDF:"Chapisha / Hifadhi PDF",
+convertInvoice:"Tengeneza ankra kutoka nukuu",newInvoice:"Ankra mpya",addInvoice:"Tengeneza ankra",
+invoiceNo:"Namba ya ankra",dueDate:"Tarehe ya mwisho ya malipo",invoiceList:"Ankara zilizohifadhiwa",saveInvoice:"Hifadhi ankra",
+noInvoices:"Hakuna ankara zilizohifadhiwa bado.",invoiceStatus:"Hali ya ankra",markPaid:"Weka imelipwa",
+newReceipt:"Risiti mpya",addReceipt:"Rekodi malipo",receiptNo:"Namba ya risiti",
+receiptList:"Risiti zilizohifadhiwa",saveReceipt:"Hifadhi risiti",noReceipts:"Hakuna risiti zilizohifadhiwa bado.",
+reference:"Namba ya muamala",relatedInvoice:"Ankra husika (si lazima)",paymentDate:"Tarehe ya malipo",
+taxRecords:"Rekodi za kodi",newTax:"Rekodi mpya ya kodi",addTax:"Ongeza rekodi ya kodi",taxType:"Aina ya kodi",
+taxAmount:"Kiasi cha kodi",taxDate:"Tarehe ya malipo / rekodi",taxReference:"Namba ya malipo TRA",
+taxList:"Rekodi za kodi zilizohifadhiwa",saveTax:"Hifadhi rekodi ya kodi",noTax:"Hakuna rekodi za kodi bado.",
+vat:"VAT",incomeTax:"Kodi ya mapato",withholding:"Kodi ya zuio",licence:"Leseni / kibali",otherTax:"Kodi nyingine",
+attachment:"Kiambatisho",chooseFile:"Chagua faili",expenseMethod:"Njia ya malipo",expenseDate:"Tarehe ya matumizi",
+quotation:"Nukuu ya bei",invoice:"Ankra",receipt:"Risiti",document:"Hati",subtotal:"Jumla ndogo",
+discount:"Punguzo",grandTotal:"Jumla kuu",businessAddress:"Anuani ya biashara",businessPhone:"Simu ya biashara",
+notes:"Maelezo",taxDisclaimer:"Rekodi za kodi zinaingizwa kwa mkono. Thibitisha viwango na masharti ya kodi kwa TRA au mtaalamu wa kodi.",
+downloadData:"Pakua nakala rudufu",restoreData:"Ingiza nakala rudufu",backupHint:"Hifadhi nakala ya taarifa za biashara yako kama faili la JSON.",
+noAttachment:"Hakuna kiambatisho",deleteAttachment:"Ondoa kiambatisho",invoiceCreated:"Ankra imetengenezwa kutoka kwenye nukuu.",
+period:"Kipindi",allRecords:"Rekodi zote",expenseReport:"Ripoti ya matumizi",salesReport:"Ripoti ya mauzo",
+totalRecordedSales:"Mauzo yaliyorekodiwa",notCalculated:"Haijahesabiwa",save:"Hifadhi",close:"Funga"
+},
+ar:{
+businessSystem:"إدارة الأعمال",mainMenu:"القائمة الرئيسية",management:"الإدارة",
+dashboard:"لوحة التحكم",sales:"المبيعات",products:"المنتجات",customers:"العملاء",expenses:"المصروفات",
+quotations:"عروض الأسعار",invoices:"الفواتير",receipts:"الإيصالات",tax:"الضرائب وTRA",reports:"التقارير",settings:"الإعدادات",
+welcome:"مرحباً بعودتك. إليك ملخص نشاطك التجاري.",totalSales:"إجمالي المبيعات",cashReceived:"المبالغ المستلمة",
+expensesTotal:"إجمالي المصروفات",outstanding:"أرصدة العملاء المستحقة",revenueNote:"قيمة المبيعات المسجلة",
+cashNote:"الأموال المستلمة فعلياً",expensesNote:"تكاليف الأعمال المسجلة",balanceNote:"أرصدة العملاء غير المدفوعة",
+salesOverview:"نظرة عامة على المبيعات",recentSales:"أحدث المبيعات",viewAll:"عرض الكل",quickOverview:"ملخص الأعمال",
+today:"اليوم",week:"هذا الأسبوع",month:"هذا الشهر",year:"هذا العام",allTime:"كل الوقت",
+customer:"العميل",product:"المنتج",date:"التاريخ",amount:"المبلغ",status:"الحالة",paid:"مدفوع",partial:"مدفوع جزئياً",unpaid:"غير مدفوع",
+addSale:"إضافة عملية بيع",newSale:"عملية بيع جديدة",selectCustomer:"اختر العميل",selectProduct:"اختر المنتج",
+quantity:"الكمية",unitPrice:"سعر الوحدة",total:"الإجمالي",paymentReceived:"المبلغ المستلم",saveSale:"حفظ البيع",
+category:"الفئة",stock:"كمية المخزون",price:"سعر البيع",costPrice:"سعر التكلفة",
+addProduct:"إضافة منتج",newProduct:"منتج جديد",productName:"اسم المنتج",saveProduct:"حفظ المنتج",
+customerName:"اسم العميل",phone:"رقم الهاتف",addCustomer:"إضافة عميل",newCustomer:"عميل جديد",saveCustomer:"حفظ العميل",
+addExpense:"إضافة مصروف",newExpense:"مصروف جديد",saveExpense:"حفظ المصروف",expenseName:"وصف المصروف",
+expenseCategory:"فئة المصروف",expenseAmount:"قيمة المصروف",description:"الوصف",search:"بحث...",
+actions:"الإجراءات",delete:"حذف",cancel:"إلغاء",confirmDelete:"هل تريد حذف هذا السجل؟",
+businessProfile:"ملف النشاط التجاري",businessName:"اسم النشاط التجاري",saveSettings:"حفظ الإعدادات",
+appearance:"المظهر",theme:"المظهر",systemLanguage:"لغة النظام",darkMode:"الوضع الداكن",lightMode:"الوضع الفاتح",
+demoNotice:"نسخة تجريبية — يتم تخزين البيانات في هذا المتصفح على هذا الجهاز فقط.",
+noSales:"لا توجد مبيعات مسجلة بعد.",noProducts:"لم تتم إضافة منتجات بعد.",noCustomers:"لم تتم إضافة عملاء بعد.",noExpenses:"لا توجد مصروفات مسجلة بعد.",
+noData:"لم يتم العثور على سجلات.",saved:"تم الحفظ بنجاح.",required:"يرجى إكمال الحقول المطلوبة.",
+cash:"نقداً",bank:"بنك",mobileMoney:"أموال الهاتف",other:"أخرى",paymentMethod:"طريقة الدفع",
+remaining:"الرصيد المتبقي",totalProducts:"إجمالي المنتجات",totalCustomers:"إجمالي العملاء",recorded:"مسجل",
+profitNote:"لم يتم حساب الربح بعد. لم يتم تنفيذ تكلفة البضائع المباعة والمحاسبة الكاملة للمخزون.",
+netCash:"النقد بعد المصروفات المسجلة",reportSummary:"الملخص",reportsTitle:"تقارير الأعمال",
+newQuotation:"عرض سعر جديد",addQuotation:"إنشاء عرض سعر",quotationNo:"رقم عرض السعر",
+quotationDate:"تاريخ عرض السعر",validUntil:"صالح حتى",quotationList:"عروض الأسعار المحفوظة",
+saveQuotation:"حفظ عرض السعر",noQuotations:"لا توجد عروض أسعار محفوظة بعد.",open:"فتح",printPDF:"طباعة / حفظ PDF",
+convertInvoice:"إنشاء فاتورة من عرض السعر",newInvoice:"فاتورة جديدة",addInvoice:"إنشاء فاتورة",
+invoiceNo:"رقم الفاتورة",dueDate:"تاريخ الاستحقاق",invoiceList:"الفواتير المحفوظة",saveInvoice:"حفظ الفاتورة",
+noInvoices:"لا توجد فواتير محفوظة بعد.",invoiceStatus:"حالة الفاتورة",markPaid:"تحديد كمدفوعة",
+newReceipt:"إيصال جديد",addReceipt:"تسجيل دفعة",receiptNo:"رقم الإيصال",
+receiptList:"الإيصالات المحفوظة",saveReceipt:"حفظ الإيصال",noReceipts:"لا توجد إيصالات محفوظة بعد.",
+reference:"مرجع المعاملة",relatedInvoice:"الفاتورة المرتبطة (اختياري)",paymentDate:"تاريخ الدفع",
+taxRecords:"سجلات الضرائب",newTax:"سجل ضريبي جديد",addTax:"إضافة سجل ضريبي",taxType:"نوع الضريبة",
+taxAmount:"مبلغ الضريبة",taxDate:"تاريخ الدفع / التسجيل",taxReference:"مرجع دفع TRA",
+taxList:"السجلات الضريبية المحفوظة",saveTax:"حفظ السجل الضريبي",noTax:"لا توجد سجلات ضريبية بعد.",
+vat:"ضريبة القيمة المضافة",incomeTax:"ضريبة الدخل",withholding:"ضريبة الاستقطاع",licence:"ترخيص / تصريح",otherTax:"ضريبة أخرى",
+attachment:"مرفق",chooseFile:"اختيار ملف",expenseMethod:"طريقة الدفع",expenseDate:"تاريخ المصروف",
+quotation:"عرض سعر",invoice:"فاتورة",receipt:"إيصال",document:"مستند",subtotal:"المجموع الفرعي",
+discount:"خصم",grandTotal:"الإجمالي النهائي",businessAddress:"عنوان النشاط التجاري",businessPhone:"هاتف النشاط التجاري",
+notes:"ملاحظات",taxDisclaimer:"السجلات الضريبية يدوية. تحقق من معدلات الضرائب ومتطلبات الإقرار مع TRA أو مختص ضريبي.",
+downloadData:"تصدير نسخة احتياطية",restoreData:"استيراد نسخة احتياطية",backupHint:"احفظ نسخة من سجلات نشاطك التجاري كملف JSON.",
+noAttachment:"لا يوجد مرفق",deleteAttachment:"إزالة المرفق",invoiceCreated:"تم إنشاء الفاتورة من عرض السعر.",
+period:"الفترة",allRecords:"كل السجلات",expenseReport:"تقرير المصروفات",salesReport:"تقرير المبيعات",
+totalRecordedSales:"المبيعات المسجلة",notCalculated:"لم يتم الحساب",save:"حفظ",close:"إغلاق"
+},
+zh:{
+businessSystem:"商业管理系统",mainMenu:"主菜单",management:"管理",
+dashboard:"仪表盘",sales:"销售",products:"产品",customers:"客户",expenses:"支出",
+quotations:"报价单",invoices:"发票",receipts:"收据",tax:"税务与TRA",reports:"报表",settings:"设置",
+welcome:"欢迎回来。以下是您的业务概览。",totalSales:"销售总额",cashReceived:"已收款",
+expensesTotal:"总支出",outstanding:"客户未结余额",revenueNote:"已记录销售的价值",
+cashNote:"实际收到的资金",expensesNote:"已记录业务成本",balanceNote:"客户未付款余额",
+salesOverview:"销售概览",recentSales:"最近销售",viewAll:"查看全部",quickOverview:"业务概览",
+today:"今天",week:"本周",month:"本月",year:"今年",allTime:"全部时间",
+customer:"客户",product:"产品",date:"日期",amount:"金额",status:"状态",paid:"已付款",partial:"部分付款",unpaid:"未付款",
+addSale:"添加销售",newSale:"新销售",selectCustomer:"选择客户",selectProduct:"选择产品",
+quantity:"数量",unitPrice:"单价",total:"总计",paymentReceived:"已收金额",saveSale:"保存销售",
+category:"类别",stock:"库存数量",price:"销售价格",costPrice:"成本价格",
+addProduct:"添加产品",newProduct:"新产品",productName:"产品名称",saveProduct:"保存产品",
+customerName:"客户姓名",phone:"电话号码",addCustomer:"添加客户",newCustomer:"新客户",saveCustomer:"保存客户",
+addExpense:"添加支出",newExpense:"新支出",saveExpense:"保存支出",expenseName:"支出说明",
+expenseCategory:"支出类别",expenseAmount:"支出金额",description:"说明",search:"搜索...",
+actions:"操作",delete:"删除",cancel:"取消",confirmDelete:"确定删除此记录吗？",
+businessProfile:"企业资料",businessName:"企业名称",saveSettings:"保存设置",
+appearance:"外观",theme:"主题",systemLanguage:"系统语言",darkMode:"深色模式",lightMode:"浅色模式",
+demoNotice:"演示版本 — 数据仅保存在此设备的浏览器中。",
+noSales:"尚无销售记录。",noProducts:"尚未添加产品。",noCustomers:"尚未添加客户。",noExpenses:"尚无支出记录。",
+noData:"没有找到记录。",saved:"保存成功。",required:"请填写必填字段。",
+cash:"现金",bank:"银行",mobileMoney:"手机支付",other:"其他",paymentMethod:"付款方式",
+remaining:"剩余余额",totalProducts:"产品总数",totalCustomers:"客户总数",recorded:"已记录",
+profitNote:"尚未计算利润。尚未实现销售商品成本和完整库存会计。",
+netCash:"扣除已记录支出后的现金",reportSummary:"摘要",reportsTitle:"业务报表",
+newQuotation:"新报价单",addQuotation:"创建报价单",quotationNo:"报价单编号",
+quotationDate:"报价日期",validUntil:"有效期至",quotationList:"已保存报价单",
+saveQuotation:"保存报价单",noQuotations:"尚无已保存报价单。",open:"打开",printPDF:"打印 / 保存 PDF",
+convertInvoice:"从报价单创建发票",newInvoice:"新发票",addInvoice:"创建发票",
+invoiceNo:"发票编号",dueDate:"到期日",invoiceList:"已保存发票",saveInvoice:"保存发票",
+noInvoices:"尚无已保存发票。",invoiceStatus:"发票状态",markPaid:"标记为已付款",
+newReceipt:"新收据",addReceipt:"记录付款",receiptNo:"收据编号",
+receiptList:"已保存收据",saveReceipt:"保存收据",noReceipts:"尚无已保存收据。",
+reference:"交易参考号",relatedInvoice:"关联发票（可选）",paymentDate:"付款日期",
+taxRecords:"税务记录",newTax:"新税务记录",addTax:"添加税务记录",taxType:"税种",
+taxAmount:"税额",taxDate:"付款 / 记录日期",taxReference:"TRA付款参考号",
+taxList:"已保存税务记录",saveTax:"保存税务记录",noTax:"尚无税务记录。",
+vat:"增值税",incomeTax:"所得税",withholding:"预扣税",licence:"许可证",otherTax:"其他税费",
+attachment:"附件",chooseFile:"选择文件",expenseMethod:"付款方式",expenseDate:"支出日期",
+quotation:"报价单",invoice:"发票",receipt:"收据",document:"文件",subtotal:"小计",
+discount:"折扣",grandTotal:"总计",businessAddress:"企业地址",businessPhone:"企业电话",
+notes:"备注",taxDisclaimer:"税务记录为手动记录。请向TRA或合格税务专业人士确认适用税率和申报要求。",
+downloadData:"导出备份",restoreData:"导入备份",backupHint:"将业务记录保存为JSON备份文件。",
+noAttachment:"无附件",deleteAttachment:"移除附件",invoiceCreated:"已从报价单创建发票。",
+period:"期间",allRecords:"全部记录",expenseReport:"支出报表",salesReport:"销售报表",
+totalRecordedSales:"已记录销售",notCalculated:"未计算",save:"保存",close:"关闭"
+}
+};
+
+let lang=localStorage.getItem("bx_lang")||"en";
+let theme=localStorage.getItem("bx_theme")||"light";
+let page="dashboard";
+let period="month";
+
+const tr=k=>L[lang]?.[k]||L.en[k]||k;
+const money=n=>"TSh "+Number(n||0).toLocaleString("en-US");
+const today=()=>new Date().toISOString().slice(0,10);
+const uid=()=>Date.now()+Math.floor(Math.random()*1000);
+
+const defaults={
+business:{name:"",phone:"",address:""},products:[],customers:[],sales:[],expenses:[],
+quotations:[],invoices:[],receipts:[],taxes:[]
+};
+
+function loadData(){
+try{
+const raw=localStorage.getItem("businessXData");
+if(!raw)return JSON.parse(JSON.stringify(defaults));
+const d=JSON.parse(raw);
+for(const k in defaults)if(d[k]===undefined)d[k]=JSON.parse(JSON.stringify(defaults[k]));
+return d;
+}catch(e){return JSON.parse(JSON.stringify(defaults))}
+}
+let data=loadData();
+function save(){localStorage.setItem("businessXData",JSON.stringify(data))}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function val(id){return document.getElementById(id)?.value||""}
+function num(id){return Number(val(id))||0}
+
+function setTheme(v){
+theme=["dark","light","blue"].includes(v)?v:"light";
+document.body.classList.remove("dark","blue");if(theme!=="light")document.body.classList.add(theme);
+localStorage.setItem("bx_theme",theme);
+const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=theme==="dark"?"#101010":theme==="blue"?"#1d5fae":"#f3f4f6";
+}
+
+function setLang(v){
+lang=L[v]?v:"en";localStorage.setItem("bx_lang",lang);
+document.documentElement.lang=lang;document.body.dir=lang==="ar"?"rtl":"ltr";
+document.getElementById("languageSelect").value=lang;
+document.querySelectorAll("[data-i]").forEach(el=>el.textContent=tr(el.dataset.i));
+render();
+}
+
+function openModal(title,html){
+document.getElementById("modalTitle").textContent=title;
+document.getElementById("modalContent").innerHTML=html;
+document.getElementById("modalBackdrop").classList.add("show");
+}
+function closeModal(){document.getElementById("modalBackdrop").classList.remove("show")}
+
+function field(label,id,type="text",required=true,extra=""){
+return `<div class="form-group"><label>${label}</label><input class="field" id="${id}" type="${type}" ${required?"required":""} ${extra}></div>`;
+}
+function selectField(label,id,options){
+return `<div class="form-group"><label>${label}</label><select class="field" id="${id}">${options}</select></div>`;
+}
+function stat(icon,label,value,note){
+return `<div class="card"><div class="stat-icon">${icon}</div><div class="stat-label">${label}</div><div class="stat-value">${value}</div><div class="stat-note">${note}</div></div>`;
+}
+function row(label,value){return `<div class="list-row"><span class="row-title">${label}</span><span class="amount">${value}</span></div>`}
+function status(s){
+if(s.received>=s.total)return `<span class="status">${tr("paid")}</span>`;
+return s.received>0?`<span class="status">${tr("partial")}</span>`:`<span class="status">${tr("unpaid")}</span>`;
+}
+function go(p){
+page=p;document.querySelectorAll(".nav-btn[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===p));
+document.getElementById("sidebar").classList.remove("open");render();
+}
+
+const pageTitleKeys={dashboard:"dashboard",newOrder:"newSale",sales:"sales",products:"products",customers:"customers",expenses:"expenses",quotations:"quotations",invoices:"invoices",receipts:"receipts",tax:"tax",reports:"reports",settings:"settings"};
+
+function render(){
+document.getElementById("pageTitle").textContent=tr(pageTitleKeys[page]||"dashboard");
+const el=document.getElementById("pageContent");
+const views={dashboard:dashboardPage,newOrder:orderPage,sales:salesPage,products:productsPage,customers:customersPage,expenses:expensesPage,quotations:quotationsPage,invoices:invoicesPage,receipts:receiptsPage,tax:taxPage,reports:reportsPage,settings:settingsPage};
+el.innerHTML=views[page]();
+if(page==="newOrder")bindOrderPage();
+}
+
+function dashboardPage(){
+const total=data.sales.reduce((a,s)=>a+s.total,0);
+const received=data.sales.reduce((a,s)=>a+s.received,0);
+const expenses=data.expenses.reduce((a,e)=>a+e.amount,0);
+const due=data.sales.reduce((a,s)=>a+s.total-s.received,0);
+const months=Array(12).fill(0);
+data.sales.forEach(s=>{let d=new Date(s.date+"T00:00:00");if(d.getFullYear()===new Date().getFullYear())months[d.getMonth()]+=s.total});
+const max=Math.max(1,...months);
+const labels=["J","F","M","A","M","J","J","A","S","O","N","D"];
+return `<div class="stats">
+${stat("↗",tr("totalSales"),money(total),tr("revenueNote"))}
+${stat("◉",tr("cashReceived"),money(received),tr("cashNote"))}
+${stat("↘",tr("expensesTotal"),money(expenses),tr("expensesNote"))}
+${stat("◷",tr("outstanding"),money(due),tr("balanceNote"))}
+</div>
+<div class="content-grid">
+<div class="card"><div class="section-head"><h3 class="section-title">${tr("salesOverview")}</h3><span class="small-muted">${new Date().getFullYear()}</span></div>
+<div class="chart">${months.map((v,i)=>`<div class="chart-col"><div class="bar-wrap"><div class="bar" style="height:${Math.max(4,v/max*100)}%"></div></div><span class="chart-label">${labels[i]}</span></div>`).join("")}</div></div>
+<div class="card"><div class="section-head"><h3 class="section-title">${tr("quickOverview")}</h3></div>
+${row(tr("totalProducts"),data.products.length)}${row(tr("totalCustomers"),data.customers.length)}
+${row(tr("quotations"),data.quotations.length)}${row(tr("invoices"),data.invoices.length)}
+${row(tr("receipts"),data.receipts.length)}${row(tr("netCash"),money(received-expenses))}
+<p class="notice">${tr("profitNote")}</p></div></div>
+<div class="card"><div class="section-head"><h3 class="section-title">${tr("recentSales")}</h3><button class="secondary-btn" onclick="go('sales')">${tr("viewAll")}</button></div>${salesTable(data.sales.slice().reverse().slice(0,5))}</div>
+<p class="notice">${tr("demoNotice")}</p>`;
+}
+
+function salesTable(items){
+if(!items.length)return `<div class="empty">${tr("noSales")}</div>`;
+return `<div class="table-wrap"><table><thead><tr><th>${tr("customer")}</th><th>${tr("product")}</th><th>${tr("date")}</th><th>${tr("amount")}</th><th>${tr("status")}</th></tr></thead><tbody>
+${items.map(s=>`<tr><td>${esc(s.customer)}</td><td>${esc(s.product)}</td><td>${esc(s.date)}</td><td>${money(s.total)}</td><td>${status(s)}</td></tr>`).join("")}
+</tbody></table></div>`;
+}
+
+function salesPage(){
+return `<div class="page-actions"><input class="field search" placeholder="${tr("search")}" oninput="filterRows(this,'salesTable')"><button class="primary-btn" onclick="go('newOrder')">＋ ${tr("addSale")}</button></div>
+<div class="card"><h3 class="section-title">${tr("sales")}</h3><div id="salesTable">${salesTable(data.sales.slice().reverse())}</div></div><p class="notice">${tr("demoNotice")}</p>`;
+}
+
+function productsPage(){
+return `<div class="page-actions"><input class="field search" placeholder="${tr("search")}" oninput="filterRows(this,'productsTable')"><button class="primary-btn" onclick="productModal()">＋ ${tr("addProduct")}</button></div>
+<div class="card"><h3 class="section-title">${tr("products")}</h3><div class="table-wrap"><table id="productsTable"><thead><tr><th>${tr("product")}</th><th>${tr("category")}</th><th>${tr("price")}</th><th>${tr("stock")}</th><th>${tr("actions")}</th></tr></thead><tbody>
+${data.products.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.category)}</td><td>${money(p.price)}</td><td>${p.stock}</td><td><button class="danger-btn" onclick="removeRecord('products',${p.id})">${tr("delete")}</button></td></tr>`).join("")||`<tr><td colspan="5" class="empty">${tr("noProducts")}</td></tr>`}
+</tbody></table></div></div>`;
+}
+
+function customersPage(){
+return `<div class="page-actions"><input class="field search" placeholder="${tr("search")}" oninput="filterRows(this,'customersTable')"><button class="primary-btn" onclick="customerModal()">＋ ${tr("addCustomer")}</button></div>
+<div class="card"><h3 class="section-title">${tr("customers")}</h3><div class="table-wrap"><table id="customersTable"><thead><tr><th>${tr("customer")}</th><th>${tr("phone")}</th><th>${tr("actions")}</th></tr></thead><tbody>
+${data.customers.map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.phone)}</td><td><button class="danger-btn" onclick="removeRecord('customers',${c.id})">${tr("delete")}</button></td></tr>`).join("")||`<tr><td colspan="3" class="empty">${tr("noCustomers")}</td></tr>`}
+</tbody></table></div></div>`;
+}
+
+function expensesPage(){
+return `<div class="page-actions"><input class="field search" placeholder="${tr("search")}" oninput="filterRows(this,'expensesTable')"><button class="primary-btn" onclick="expenseModal()">＋ ${tr("addExpense")}</button></div>
+<div class="card"><h3 class="section-title">${tr("expenses")}</h3><div class="table-wrap"><table id="expensesTable"><thead><tr><th>${tr("description")}</th><th>${tr("category")}</th><th>${tr("date")}</th><th>${tr("amount")}</th><th>${tr("attachment")}</th><th>${tr("actions")}</th></tr></thead><tbody>
+${data.expenses.slice().reverse().map(e=>`<tr><td>${esc(e.name)}</td><td>${esc(e.category)}</td><td>${esc(e.date)}</td><td>${money(e.amount)}</td><td>${e.attachment?esc(e.attachment):tr("noAttachment")}</td><td><button class="danger-btn" onclick="removeRecord('expenses',${e.id})">${tr("delete")}</button></td></tr>`).join("")||`<tr><td colspan="6" class="empty">${tr("noExpenses")}</td></tr>`}
+</tbody></table></div></div><p class="notice">${tr("demoNotice")}</p>`;
+}
+
+/* QUOTATIONS AND INVOICES */
+function documentForm(kind,source=null){
+const isQ=kind==="quotation";
+const prefix=isQ?"QTN":"INV";
+const docNo=source?.number||`${prefix}-${new Date().getFullYear()}-${String(uid()).slice(-6)}`;
+const title=isQ?tr("newQuotation"):tr("newInvoice");
+const customerOpts=data.customers.map(c=>`<option ${source?.customer===c.name?"selected":""}>${esc(c.name)}</option>`).join("");
+const productOpts=data.products.map(p=>`<option value="${p.id}" ${source?.productId==p.id?"selected":""}>${esc(p.name)}</option>`).join("");
+openModal(title,`<form id="docForm">
+<div class="form-grid">
+${field(isQ?tr("quotationNo"):tr("invoiceNo"),"docNo","text",true,`value="${esc(docNo)}" readonly`)}
+${selectField(tr("customer"),"docCustomer",customerOpts)}
+${field(tr("date"),"docDate","date",true,`value="${source?.date||today()}"`)}
+${field(isQ?tr("validUntil"):tr("dueDate"),"docDue","date",true,`value="${source?.due||today()}"`)}
+${selectField(tr("product"),"docProduct",productOpts)}
+${field(tr("quantity"),"docQty","number",true,`min="1" value="${source?.qty||1}"`)}
+${field(tr("unitPrice"),"docPrice","number",true,`min="0" value="${source?.price||""}"`)}
+${field(tr("discount"),"docDiscount","number",false,`min="0" value="${source?.discount||0}"`)}
+</div>
+<div class="form-group" style="margin-top:13px"><label>${tr("notes")}</label><textarea class="field" id="docNotes" rows="2">${esc(source?.notes||"")}</textarea></div>
+<div class="list-row"><span class="row-title">${tr("grandTotal")}</span><strong id="docTotal">—</strong></div>
+<button class="primary-btn" style="width:100%;margin-top:15px">${isQ?tr("saveQuotation"):tr("saveInvoice")}</button>
+</form>`);
+
+function update(){
+const p=data.products.find(x=>x.id===Number(val("docProduct")));
+const q=num("docQty"),price=num("docPrice")||(p?.price||0),discount=num("docDiscount");
+const total=Math.max(0,q*price-discount);
+const el=document.getElementById("docTotal");if(el)el.textContent=money(total);
+}
+document.getElementById("docProduct").addEventListener("change",()=>{
+const p=data.products.find(x=>x.id===Number(val("docProduct")));
+if(p)document.getElementById("docPrice").value=p.price;update();
+});
+["docQty","docPrice","docDiscount"].forEach(id=>document.getElementById(id).addEventListener("input",update));
+update();
+document.getElementById("docForm").onsubmit=e=>{
+e.preventDefault();
+const p=data.products.find(x=>x.id===Number(val("docProduct")));
+const qty=num("docQty"),price=num("docPrice"),discount=num("docDiscount");
+if(!p||qty<=0||price<0||discount>qty*price){alert(tr("required"));return}
+const record={
+id:uid(),number:val("docNo"),customer:val("docCustomer"),date:val("docDate"),
+due:val("docDue"),product:p.name,productId:p.id,qty,price,discount,
+total:qty*price-discount,notes:val("docNotes"),status:"Unpaid",received:0
+};
+data[isQ?"quotations":"invoices"].push(record);
+save();closeModal();render();
+};
+}
+
+function quotationsPage(){
+return `<div class="page-actions"><input class="field search" placeholder="${tr("search")}" oninput="filterRows(this,'quotationTable')"><button class="primary-btn" onclick="documentForm('quotation')">＋ ${tr("addQuotation")}</button></div>
+<div class="card"><h3 class="section-title">${tr("quotationList")}</h3>${documentTable(data.quotations,"quotation")}</div>`;
+}
+
+function invoicesPage(){
+return `<div class="page-actions"><input class="field search" placeholder="${tr("search")}" oninput="filterRows(this,'invoiceTable')"><button class="primary-btn" onclick="documentForm('invoice')">＋ ${tr("addInvoice")}</button></div>
+<div class="card"><h3 class="section-title">${tr("invoiceList")}</h3>${documentTable(data.invoices,"invoice")}</div>`;
+}
+
+function documentTable(items,type){
+const isQ=type==="quotation";
+if(!items.length)return `<div class="empty">${tr(isQ?"noQuotations":"noInvoices")}</div>`;
+return `<div class="table-wrap"><table id="${isQ?"quotationTable":"invoiceTable"}"><thead><tr><th>${isQ?tr("quotationNo"):tr("invoiceNo")}</th><th>${tr("customer")}</th><th>${tr("date")}</th><th>${tr("amount")}</th><th>${tr("status")}</th><th>${tr("actions")}</th></tr></thead><tbody>
+${items.slice().reverse().map(d=>`<tr><td>${esc(d.number)}</td><td>${esc(d.customer)}</td><td>${esc(d.date)}</td><td>${money(d.total)}</td><td><span class="status">${esc(d.status||"Open")}</span></td><td><button class="secondary-btn" onclick="viewDocument('${type}',${d.id})">${tr("open")}</button> ${isQ?`<button class="secondary-btn" onclick="makeInvoice(${d.id})">${tr("convertInvoice")}</button>`:""}</td></tr>`).join("")}
+</tbody></table></div>`;
+}
+
+function makeInvoice(id){
+const q=data.quotations.find(x=>x.id===id);if(!q)return;
+const inv={...q,id:uid(),number:`INV-${new Date().getFullYear()}-${String(uid()).slice(-6)}`,due:q.due,status:"Unpaid",received:0,sourceQuotation:q.number};
+data.invoices.push(inv);save();go("invoices");
+}
+
+function viewDocument(type,id){
+const d=data[type==="quotation"?"quotations":"invoices"].find(x=>x.id===id);if(!d)return;
+const biz=data.business;
+const title=type==="quotation"?tr("quotation"):tr("invoice");
+const html=`<div class="document-preview" id="printArea">
+<h2>${esc(biz.name||"BUSINESS X")}</h2>
+<p>${esc(biz.address||"")}<br>${esc(biz.phone||"")}</p>
+<hr>
+<h2>${title}</h2><p><b>${type==="quotation"?tr("quotationNo"):tr("invoiceNo")}:</b> ${esc(d.number)}<br>
+<b>${tr("customer")}:</b> ${esc(d.customer)}<br><b>${tr("date")}:</b> ${esc(d.date)}<br>
+<b>${type==="quotation"?tr("validUntil"):tr("dueDate")}:</b> ${esc(d.due||"")}</p>
+<table><thead><tr><th>${tr("product")}</th><th>${tr("quantity")}</th><th>${tr("unitPrice")}</th><th>${tr("amount")}</th></tr></thead>
+<tbody><tr><td>${esc(d.product)}</td><td>${d.qty}</td><td>${money(d.price)}</td><td>${money(d.qty*d.price)}</td></tr></tbody></table>
+<p class="doc-total">${tr("subtotal")}: ${money(d.qty*d.price)}<br>${tr("discount")}: ${money(d.discount)}<br><b>${tr("grandTotal")}: ${money(d.total)}</b></p>
+<p>${tr("notes")}: ${esc(d.notes||"—")}</p>
+<p style="margin-top:45px">_________________________<br>${esc(biz.name||"")}</p>
+</div><div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap">
+<button class="primary-btn" onclick="printDocument()">${tr("printPDF")}</button>
+${type==="invoice"?`<button class="secondary-btn" onclick="openReceiptForInvoice(${d.id})">${tr("addReceipt")}</button>`:""}
+</div>`;
+openModal(title,html);
+}
+
+function printDocument(){
+const area=document.getElementById("printArea");if(!area)return;
+const w=window.open("","_blank");
+if(!w){alert("Please allow pop-ups to print this document.");return}
+w.document.write(`<html><head><title>BUSINESS X Document</title><style>body{font-family:Arial;padding:35px;color:#111}table{width:100%;border-collapse:collapse}td,th{padding:12px;border-bottom:1px solid #ddd;text-align:left}.doc-total{text-align:right;margin-top:20px}</style></head><body>${area.outerHTML}<script>window.onload=()=>window.print()<\/script></body></html>`);
+w.document.close();
+}
+
+/* RECEIPTS */
+function receiptsPage(){
+return `<div class="page-actions"><input class="field search" placeholder="${tr("search")}" oninput="filterRows(this,'receiptTable')"><button class="primary-btn" onclick="receiptModal()">＋ ${tr("addReceipt")}</button></div>
+<div class="card"><h3 class="section-title">${tr("receiptList")}</h3>${receiptTable()}</div>`;
+}
+
+function receiptTable(){
+if(!data.receipts.length)return `<div class="empty">${tr("noReceipts")}</div>`;
+return `<div class="table-wrap"><table id="receiptTable"><thead><tr><th>${tr("receiptNo")}</th><th>${tr("customer")}</th><th>${tr("date")}</th><th>${tr("amount")}</th><th>${tr("paymentMethod")}</th><th>${tr("actions")}</th></tr></thead><tbody>
+${data.receipts.slice().reverse().map(r=>`<tr><td>${esc(r.number)}</td><td>${esc(r.customer)}</td><td>${esc(r.date)}</td><td>${money(r.amount)}</td><td>${esc(r.method)}</td><td><button class="secondary-btn" onclick="viewReceipt(${r.id})">${tr("open")}</button></td></tr>`).join("")}
+</tbody></table></div>`;
+}
+
+function receiptModal(invoice=null){
+const customers=data.customers.map(c=>`<option ${invoice?.customer===c.name?"selected":""}>${esc(c.name)}</option>`).join("");
+const invOpts=`<option value="">—</option>`+data.invoices.map(i=>`<option value="${i.id}" ${invoice?.id===i.id?"selected":""}>${esc(i.number)} — ${esc(i.customer)}</option>`).join("");
+openModal(tr("newReceipt"),`<form id="receiptForm">
+<div class="form-grid">
+${field(tr("receiptNo"),"rNo","text",true,`value="RCT-${new Date().getFullYear()}-${String(uid()).slice(-6)}" readonly`)}
+${selectField(tr("customer"),"rCustomer",customers)}
+${field(tr("paymentDate"),"rDate","date",true,`value="${today()}"`)}
+${field(tr("amount"),"rAmount","number",true,'min="1"')}
+${selectField(tr("paymentMethod"),"rMethod",`<option>${tr("cash")}</option><option>${tr("bank")}</option><option>${tr("mobileMoney")}</option><option>${tr("other")}</option>`)}
+${selectField(tr("relatedInvoice"),"rInvoice",invOpts)}
+${field(tr("reference"),"rRef","text",false)}
+</div><button class="primary-btn" style="width:100%;margin-top:18px">${tr("saveReceipt")}</button></form>`);
+document.getElementById("receiptForm").onsubmit=e=>{
+e.preventDefault();const amount=num("rAmount");if(amount<=0)return;
+const inv=data.invoices.find(i=>i.id===Number(val("rInvoice")));
+const r={id:uid(),number:val("rNo"),customer:val("rCustomer"),date:val("rDate"),amount,method:val("rMethod"),reference:val("rRef"),invoiceId:inv?.id||null};
+data.receipts.push(r);
+if(inv){inv.received=(inv.received||0)+amount;inv.status=inv.received>=inv.total?"Paid":"Partially paid"}
+save();closeModal();render();
+};
+}
+
+function openReceiptForInvoice(id){
+const inv=data.invoices.find(i=>i.id===id);closeModal();receiptModal(inv);
+}
+
+function viewReceipt(id){
+const r=data.receipts.find(x=>x.id===id);if(!r)return;
+const inv=data.invoices.find(x=>x.id===r.invoiceId);
+openModal(tr("receipt"),`<div class="document-preview" id="printArea">
+<h2>${esc(data.business.name||"BUSINESS X")}</h2><p>${esc(data.business.address||"")}<br>${esc(data.business.phone||"")}</p><hr>
+<h2>${tr("receipt")}</h2><p><b>${tr("receiptNo")}:</b> ${esc(r.number)}<br><b>${tr("customer")}:</b> ${esc(r.customer)}<br><b>${tr("date")}:</b> ${esc(r.date)}</p>
+<h2>${money(r.amount)}</h2><p>${tr("paymentMethod")}: ${esc(r.method)}<br>${tr("reference")}: ${esc(r.reference||"—")}<br>${tr("relatedInvoice")}: ${esc(inv?.number||"—")}</p>
+<p>_________________________<br>${esc(data.business.name||"")}</p>
+</div><button class="primary-btn no-print" onclick="printDocument()">${tr("printPDF")}</button>`);
+}
+
+/* TAX RECORDS */
+function taxPage(){
+return `<div class="page-actions"><input class="field search" placeholder="${tr("search")}" oninput="filterRows(this,'taxTable')"><button class="primary-btn" onclick="taxModal()">＋ ${tr("addTax")}</button></div>
+<div class="card"><h3 class="section-title">${tr("taxList")}</h3>
+${data.taxes.length?`<div class="table-wrap"><table id="taxTable"><thead><tr><th>${tr("taxType")}</th><th>${tr("date")}</th><th>${tr("amount")}</th><th>${tr("reference")}</th><th>${tr("actions")}</th></tr></thead><tbody>
+${data.taxes.slice().reverse().map(x=>`<tr><td>${esc(x.type)}</td><td>${esc(x.date)}</td><td>${money(x.amount)}</td><td>${esc(x.reference||"—")}</td><td><button class="danger-btn" onclick="removeRecord('taxes',${x.id})">${tr("delete")}</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">${tr("noTax")}</div>`}
+</div><p class="notice">${tr("taxDisclaimer")}</p>`;
+}
+
+function taxModal(){
+openModal(tr("newTax"),`<form id="taxForm"><div class="form-grid">
+${selectField(tr("taxType"),"tType",`<option>${tr("vat")}</option><option>${tr("incomeTax")}</option><option>${tr("withholding")}</option><option>${tr("licence")}</option><option>${tr("otherTax")}</option>`)}
+${field(tr("taxAmount"),"tAmount","number")}
+${field(tr("taxDate"),"tDate","date",true,`value="${today()}"`)}
+${field(tr("taxReference"),"tRef","text",false)}
+</div><div class="form-group" style="margin-top:13px"><label>${tr("notes")}</label><textarea class="field" id="tNotes" rows="2"></textarea></div>
+<button class="primary-btn" style="width:100%;margin-top:18px">${tr("saveTax")}</button></form>`);
+document.getElementById("taxForm").onsubmit=e=>{
+e.preventDefault();if(num("tAmount")<=0)return;
+data.taxes.push({id:uid(),type:val("tType"),amount:num("tAmount"),date:val("tDate"),reference:val("tRef"),notes:val("tNotes")});
+save();closeModal();render();
+};
+}
+
+/* ADD BASIC RECORDS */
+function productModal(){
+openModal(tr("newProduct"),`<form id="pForm"><div class="form-grid">
+${field(tr("productName"),"pName")}${field(tr("category"),"pCat")}
+${field(tr("price"),"pPrice","number")}${field(tr("costPrice"),"pCost","number")}
+${field(tr("stock"),"pStock","number")}
+</div><button class="primary-btn" style="width:100%;margin-top:18px">${tr("saveProduct")}</button></form>`);
+document.getElementById("pForm").onsubmit=e=>{e.preventDefault();data.products.push({id:uid(),name:val("pName"),category:val("pCat"),price:num("pPrice"),cost:num("pCost"),stock:num("pStock")});save();closeModal();render()};
+}
+
+function customerModal(){
+openModal(tr("newCustomer"),`<form id="cForm"><div class="form-grid">${field(tr("customerName"),"cName")}${field(tr("phone"),"cPhone","tel",false)}</div><button class="primary-btn" style="width:100%;margin-top:18px">${tr("saveCustomer")}</button></form>`);
+document.getElementById("cForm").onsubmit=e=>{e.preventDefault();data.customers.push({id:uid(),name:val("cName"),phone:val("cPhone")});save();closeModal();render()};
+}
+
+function expenseModal(){
+openModal(tr("newExpense"),`<form id="eForm"><div class="form-grid">
+${field(tr("expenseName"),"eName")}
+${selectField(tr("expenseCategory"),"eCat",["Rent","Utilities","Transport","Salaries","Marketing","Supplies","Maintenance","Other"].map(x=>`<option>${x}</option>`).join(""))}
+${field(tr("expenseAmount"),"eAmount","number")}
+${field(tr("expenseDate"),"eDate","date",true,`value="${today()}"`)}
+${selectField(tr("expenseMethod"),"eMethod",`<option>${tr("cash")}</option><option>${tr("bank")}</option><option>${tr("mobileMoney")}</option><option>${tr("other")}</option>`)}
+<div class="form-group"><label>${tr("attachment")}</label><input class="field" id="eFile" type="file" accept="image/*,.pdf"></div>
+</div><button class="primary-btn" style="width:100%;margin-top:18px">${tr("saveExpense")}</button></form>`);
+document.getElementById("eForm").onsubmit=async e=>{
+e.preventDefault();if(num("eAmount")<=0)return;
+const file=document.getElementById("eFile").files[0];
+let attachment="";
+if(file){
+if(file.size>1500000){alert("Please choose an attachment smaller than 1.5 MB.");return}
+attachment=file.name;
+}
+data.expenses.push({id:uid(),name:val("eName"),category:val("eCat"),amount:num("eAmount"),date:val("eDate"),method:val("eMethod"),attachment});
+save();closeModal();render();
+};
+}
+
+function orderPage(){
+if(!data.products.length||!data.customers.length)return `<div class="card"><div class="empty">${tr("required")}<br><br><button class="secondary-btn" onclick="go('products')">${tr("addProduct")}</button> <button class="secondary-btn" onclick="go('customers')">${tr("addCustomer")}</button></div></div>`;
+return `<div class="page-actions"><button class="secondary-btn" onclick="go('sales')">← ${tr("sales")}</button></div><div class="card" style="max-width:850px;margin:0 auto"><div class="section-head"><h3 class="section-title">${tr("newSale")}</h3></div><form id="orderPageForm"><div class="form-grid">
+${selectField(tr("customer"),"opCustomer",data.customers.map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join(""))}
+${selectField(tr("product"),"opProduct",data.products.map(p=>`<option value="${p.id}">${esc(p.name)} — ${money(p.price)}</option>`).join(""))}
+${field(tr("quantity"),"opQty","number",true,'value="1" min="1"')}
+${field(tr("paymentReceived"),"opReceived","number",true,'value="0" min="0"')}
+${selectField(tr("paymentMethod"),"opMethod",`<option>Cash</option><option>Bank</option><option>Mobile money</option><option>Other</option>`)}
+${field(tr("date"),"opDate","date",true,`value="${today()}"`)}
+</div><div class="list-row" style="margin-top:16px"><span class="row-title">${tr("amount")}</span><strong id="orderTotal">TSh 0</strong></div><button class="primary-btn" style="width:100%;margin-top:18px">${tr("saveSale")}</button></form></div>`;
+}
+
+function bindOrderPage(){
+const f=document.getElementById("orderPageForm");if(!f)return;
+const updateTotal=()=>{const p=data.products.find(x=>x.id===Number(val("opProduct")));const q=Number(val("opQty"))||0;document.getElementById("orderTotal").textContent=money((p?.price||0)*q)};
+f.querySelector("#opProduct").addEventListener("change",updateTotal);f.querySelector("#opQty").addEventListener("input",updateTotal);updateTotal();
+f.onsubmit=e=>{e.preventDefault();const p=data.products.find(x=>x.id===Number(val("opProduct")));const q=num("opQty"),received=num("opReceived");if(!p||q<=0||q>p.stock||received>p.price*q){alert(tr("required"));return;}data.sales.push({id:uid(),customer:val("opCustomer"),product:p.name,qty:q,total:p.price*q,received,date:val("opDate"),method:val("opMethod")});p.stock-=q;save();go("sales");};
+}
+
+function saleModal(){
+if(!data.products.length||!data.customers.length){alert(tr("required"));return}
+openModal(tr("newSale"),`<form id="sForm"><div class="form-grid">
+${selectField(tr("customer"),"sCustomer",data.customers.map(c=>`<option>${esc(c.name)}</option>`).join(""))}
+${selectField(tr("product"),"sProduct",data.products.map(p=>`<option value="${p.id}">${esc(p.name)} — ${money(p.price)}</option>`).join(""))}
+${field(tr("quantity"),"sQty","number",true,'value="1" min="1"')}
+${field(tr("paymentReceived"),"sReceived","number",true,'value="0" min="0"')}
+${selectField(tr("paymentMethod"),"sMethod",`<option>Cash</option><option>Bank</option><option>Mobile money</option><option>Other</option>`)}
+${field(tr("date"),"sDate","date",true,`value="${today()}"`)}
+</div><button class="primary-btn" style="width:100%;margin-top:18px">${tr("saveSale")}</button></form>`);
+document.getElementById("sForm").onsubmit=e=>{
+e.preventDefault();const p=data.products.find(x=>x.id===Number(val("sProduct")));const q=num("sQty"),received=num("sReceived");
+if(!p||q<=0||q>p.stock||received>p.price*q){alert(tr("required"));return}
+data.sales.push({id:uid(),customer:val("sCustomer"),product:p.name,qty:q,total:p.price*q,received,date:val("sDate"),method:val("sMethod")});
+p.stock-=q;save();closeModal();render();
+};
+}
+
+/* SETTINGS, REPORTS, BACKUP */
+function reportsPage(){
+const sales=data.sales.reduce((a,s)=>a+s.total,0),cash=data.sales.reduce((a,s)=>a+s.received,0);
+const exp=data.expenses.reduce((a,e)=>a+e.amount,0),due=data.sales.reduce((a,s)=>a+s.total-s.received,0);
+return `<div class="stats">
+${stat("↗",tr("totalSales"),money(sales),tr("salesReport"))}
+${stat("◉",tr("cashReceived"),money(cash),tr("cashNote"))}
+${stat("↘",tr("expensesTotal"),money(exp),tr("expenseReport"))}
+${stat("◷",tr("outstanding"),money(due),tr("balanceNote"))}
+</div><div class="card"><h3 class="section-title">${tr("reportSummary")}</h3>
+${row(tr("totalProducts"),data.products.length)}${row(tr("totalCustomers"),data.customers.length)}
+${row(tr("quotations"),data.quotations.length)}${row(tr("invoices"),data.invoices.length)}
+${row(tr("receipts"),data.receipts.length)}${row(tr("tax"),data.taxes.length)}
+${row(tr("netCash"),money(cash-exp))}<p class="notice">${tr("profitNote")}</p></div>`;
+}
+
+function settingsPage(){
+return `<div class="settings-grid">
+<div class="card"><h3 class="section-title">${tr("businessProfile")}</h3>
+<div class="form-group" style="margin-top:15px"><label>${tr("businessName")}</label><input class="field" id="bName" value="${esc(data.business.name)}"></div>
+<div class="form-group" style="margin-top:12px"><label>${tr("businessAddress")}</label><input class="field" id="bAddress" value="${esc(data.business.address)}"></div>
+<div class="form-group" style="margin-top:12px"><label>${tr("businessPhone")}</label><input class="field" id="bPhone" value="${esc(data.business.phone)}"></div>
+<button class="primary-btn" style="margin-top:15px" onclick="saveBusiness()">${tr("saveSettings")}</button></div>
+<div class="card"><h3 class="section-title">${tr("appearance")}</h3>
+<div class="list-row"><span class="row-title">${tr("theme")}</span><select class="language-select" onchange="setTheme(this.value);render()"><option value="light" ${theme==="light"?"selected":""}>Light</option><option value="dark" ${theme==="dark"?"selected":""}>Dark</option><option value="blue" ${theme==="blue"?"selected":""}>Blue</option></select></div>
+<div class="list-row"><span class="row-title">${tr("systemLanguage")}</span><select class="language-select" onchange="setLang(this.value)"><option value="en" ${lang==="en"?"selected":""}>English</option><option value="sw" ${lang==="sw"?"selected":""}>Kiswahili</option><option value="ar" ${lang==="ar"?"selected":""}>العربية</option><option value="zh" ${lang==="zh"?"selected":""}>中文</option></select></div>
+</div>
+<div class="card"><h3 class="section-title">${tr("downloadData")}</h3><p class="notice">${tr("backupHint")}</p><button class="primary-btn" onclick="exportBackup()">${tr("downloadData")}</button></div>
+<div class="card"><h3 class="section-title">${tr("restoreData")}</h3><input class="field" type="file" id="backupFile" accept=".json,application/json"><button class="secondary-btn" style="margin-top:12px" onclick="importBackup()">${tr("restoreData")}</button></div>
+</div><p class="notice">${tr("demoNotice")}</p>`;
+}
+
+function saveBusiness(){
+data.business.name=val("bName");data.business.address=val("bAddress");data.business.phone=val("bPhone");save();render();alert(tr("saved"));
+}
+
+function exportBackup(){
+const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="business-x-backup.json";a.click();URL.revokeObjectURL(a.href);
+}
+
+function importBackup(){
+const file=document.getElementById("backupFile").files[0];if(!file)return;
+const reader=new FileReader();
+reader.onload=()=>{
+try{const imported=JSON.parse(reader.result);if(!imported.products||!imported.sales)throw Error();
+data={...defaults,...imported};save();render();alert(tr("saved"));
+}catch(e){alert("Invalid BUSINESS X backup file.")}
+};
+reader.readAsText(file);
+}
+
+/* HELPERS */
+function removeRecord(type,id){
+if(!confirm(tr("confirmDelete")))return;
+data[type]=data[type].filter(x=>x.id!==id);save();render();
+}
+function filterRows(input,id){
+const table=document.getElementById(id);if(!table)return;
+table.querySelectorAll("tbody tr").forEach(r=>r.style.display=r.textContent.toLowerCase().includes(input.value.toLowerCase())?"":"none");
+}
+
+/* EVENTS AND START */
+document.querySelectorAll(".nav-btn[data-page]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.page)));
+document.getElementById("languageSelect").addEventListener("change",e=>setLang(e.target.value));
+document.getElementById("themeBtn").addEventListener("click",()=>{const order=["light","dark","blue"];setTheme(order[(order.indexOf(theme)+1)%order.length]);render();});
+document.getElementById("menuBtn").addEventListener("click",()=>document.getElementById("sidebar").classList.toggle("open"));
+document.getElementById("closeModal").addEventListener("click",closeModal);
+document.getElementById("modalBackdrop").addEventListener("click",e=>{if(e.target.id==="modalBackdrop")closeModal()});
+setTheme(theme);
+setLang(lang);
+</script>
+</body>
+</html>
